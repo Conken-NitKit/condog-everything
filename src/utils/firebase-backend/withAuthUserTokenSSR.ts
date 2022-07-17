@@ -1,15 +1,13 @@
-import { GetServerSidePropsResult, GetServerSideProps } from "next";
-import nookies, { parseCookies } from "nookies";
+import { GetServerSideProps } from "next";
+import nookies from "nookies";
 import { redirectActions, RedirectAction } from "../redirects";
 import { getFirebaseAdminAuth } from "./firebaseAdmin";
-import { verifyIdToken } from "./verifyIdToken";
 
 type Options = {
   whenAuthed?: RedirectAction;
   whenUnauthed?: RedirectAction;
   appPageURL?: string;
   signInPageURL?: string;
-  useToken?: boolean;
 };
 
 export const withAuthUserTokenSSR: (options: Options) => GetServerSideProps =
