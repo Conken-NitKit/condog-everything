@@ -11,7 +11,7 @@ type Options = {
   signInPageURL?: string;
 };
 
-export const withAuthUserTokenSSR: (
+export const withAuthUserSSR: (
   options: Options,
   callBack?: (
     ctx: Parameters<GetServerSideProps>[0],
