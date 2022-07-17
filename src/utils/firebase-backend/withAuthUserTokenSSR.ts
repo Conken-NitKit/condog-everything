@@ -1,3 +1,4 @@
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { GetServerSideProps } from "next";
 import nookies from "nookies";
 import { redirectActions, RedirectAction } from "../redirects";
@@ -10,13 +11,22 @@ type Options = {
   signInPageURL?: string;
 };
 
-export const withAuthUserTokenSSR: (options: Options) => GetServerSideProps =
-  ({
-    whenAuthed = redirectActions.NO_REDIRECT,
-    whenUnauthed = redirectActions.NO_REDIRECT,
-    appPageURL = null,
-    signInPageURL = null,
-  } = {}) =>
+export const withAuthUserTokenSSR: (
+  options: Options,
+  callBack?: (
+    ctx: Parameters<GetServerSideProps>[0],
+    user?: DecodedIdToken
+  ) => ReturnType<GetServerSideProps>
+) => GetServerSideProps =
+  (
+    {
+      whenAuthed = redirectActions.NO_REDIRECT,
+      whenUnauthed = redirectActions.NO_REDIRECT,
+      appPageURL = null,
+      signInPageURL = null,
+    } = {},
+    callBack
+  ) =>
   async (ctx) => {
     const cookies = nookies.get(ctx);
     const session = cookies.session || "";
@@ -27,12 +37,6 @@ export const withAuthUserTokenSSR: (options: Options) => GetServerSideProps =
 
     if (!user) {
       switch (whenUnauthed) {
-        case redirectActions.NO_REDIRECT:
-          return {
-            props: {
-              user: null,
-            },
-          };
         case redirectActions.REDIRECT_TO_SIGN_IN:
           if (!signInPageURL) {
             return {
@@ -55,6 +59,15 @@ export const withAuthUserTokenSSR: (options: Options) => GetServerSideProps =
             redirect: {
               destination: appPageURL,
               permanent: false,
+            },
+          };
+        default:
+          if (callBack) {
+            return callBack(ctx);
+          }
+          return {
+            props: {
+              user,
             },
           };
       }
@@ -86,6 +99,9 @@ export const withAuthUserTokenSSR: (options: Options) => GetServerSideProps =
           },
         };
       default:
+        if (callBack) {
+          return callBack(ctx, user);
+        }
         return {
           props: {
             user,
