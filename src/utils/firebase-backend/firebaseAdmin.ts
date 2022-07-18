@@ -29,3 +29,4 @@ export const firebaseAdmin =
  export const getFirebaseAdminAuth = (): admin.auth.Auth => {
   return firebaseAdmin.auth();
 };
+ 

@@ -12,7 +12,7 @@ type Options = {
 };
 
 export const withAuthUserSSR: (
-  options: Options,
+  options?: Options,
   callBack?: (
     ctx: Parameters<GetServerSideProps>[0],
     user?: DecodedIdToken
@@ -37,6 +37,15 @@ export const withAuthUserSSR: (
 
     if (!user) {
       switch (whenUnauthed) {
+        case redirectActions.NO_REDIRECT:
+          if (callBack) {
+            return callBack(ctx);
+          }
+          return {
+            props: {
+              user,
+            },
+          };
         case redirectActions.REDIRECT_TO_SIGN_IN:
           if (!signInPageURL) {
             return {
@@ -61,19 +70,19 @@ export const withAuthUserSSR: (
               permanent: false,
             },
           };
-        default:
-          if (callBack) {
-            return callBack(ctx);
-          }
-          return {
-            props: {
-              user,
-            },
-          };
       }
     }
 
     switch (whenAuthed) {
+      case redirectActions.NO_REDIRECT:
+        if (callBack) {
+          return callBack(ctx, user);
+        }
+        return {
+          props: {
+            user,
+          },
+        };
       case redirectActions.REDIRECT_TO_SIGN_IN:
         if (!signInPageURL) {
           return {
@@ -96,15 +105,6 @@ export const withAuthUserSSR: (
           redirect: {
             destination: appPageURL,
             permanent: false,
-          },
-        };
-      default:
-        if (callBack) {
-          return callBack(ctx, user);
-        }
-        return {
-          props: {
-            user,
           },
         };
     }
