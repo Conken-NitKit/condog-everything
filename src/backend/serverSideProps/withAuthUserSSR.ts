@@ -1,7 +1,7 @@
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { GetServerSideProps } from "next";
 import nookies from "nookies";
-import { redirectActions, RedirectAction } from "../../utils/redirects";
+import { redirectActions, RedirectAction } from "../../shared/utils/redirects";
 import { getFirebaseAdminAuth } from "../services/firebase-backend/firebaseAdmin";
 
 type Options = {
