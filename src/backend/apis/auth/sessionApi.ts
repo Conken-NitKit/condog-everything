@@ -1,7 +1,7 @@
 import type { NextApiHandler } from "next";
 
 import { setCookie } from "nookies";
-import { firebaseAdmin } from "../../utils/firebase-backend/firebaseAdmin";
+import { firebaseAdmin } from "../../services/firebase-backend/firebaseAdmin";
 
 export const sessionApi: NextApiHandler<string> = async (req, res) => {
   // "POST"以外は、"404 Not Found"を返す

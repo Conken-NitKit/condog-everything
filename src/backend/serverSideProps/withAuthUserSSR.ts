@@ -1,8 +1,8 @@
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { GetServerSideProps } from "next";
 import nookies from "nookies";
-import { redirectActions, RedirectAction } from "../redirects";
-import { getFirebaseAdminAuth } from "./firebaseAdmin";
+import { redirectActions, RedirectAction } from "../../utils/redirects";
+import { getFirebaseAdminAuth } from "../services/firebase-backend/firebaseAdmin";
 
 type Options = {
   whenAuthed?: RedirectAction;
@@ -27,8 +27,8 @@ export const withAuthUserSSR: (
     } = {},
     callBack
   ) =>
-  async (ctx) => {
-    const cookies = nookies.get(ctx);
+  async (ssrContext) => {
+    const cookies = nookies.get(ssrContext);
     const session = cookies.session || "";
 
     const user = await getFirebaseAdminAuth()
@@ -39,7 +39,7 @@ export const withAuthUserSSR: (
       switch (whenUnauthed) {
         case redirectActions.NO_REDIRECT:
           if (callBack) {
-            return callBack(ctx);
+            return callBack(ssrContext);
           }
           return {
             props: {
@@ -76,7 +76,7 @@ export const withAuthUserSSR: (
     switch (whenAuthed) {
       case redirectActions.NO_REDIRECT:
         if (callBack) {
-          return callBack(ctx, user);
+          return callBack(ssrContext, user);
         }
         return {
           props: {
