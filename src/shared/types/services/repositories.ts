@@ -7,9 +7,9 @@ export interface RepositoryConstructor<C, T extends Repository> {
 }
 
 export type Result<T = {}> =
+  | { success: true }
   | {
       success: true;
       data: T;
-      error?: undefined;
     }
   | { success: false; error: ErrorObject };
