@@ -1,0 +1,7 @@
+{
+  "extends": "@condog-pkg/tsconfig/library",
+  "display": "React Library",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

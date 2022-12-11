@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "next-env.d.ts",
+    "src/**/*",
+    ".next/types/**/*.ts"
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+name: Main
+
+on:
+  push:
+
+jobs:
+  ci:
+    runs-on: ubuntu-20.04
+    env:
+      # Remote Caching 機能を利用するための環境変数
+      # @see https://turbo.build/repo/docs/ci/github-actions
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # node_modules がキャッシュされていれば展開する
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+
+      # node_modules がキャッシュされてなければ npm ci
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: npm install
+        run: npm ci
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run type-check
+        run: npm run type-check
+
+      - name: Check lint
+        run: npm run lint
+
+      - name: Run format
+        run: npm run format

@@ -1,0 +1,11 @@
+{
+  "extends": "@condog-pkg/tsconfig/common",
+  "display": "TS Library",
+  "compilerOptions": {
+    "lib": ["ESNext", "dom"],
+    "target": "es5",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": false
+  }
+}
