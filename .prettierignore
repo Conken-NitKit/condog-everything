@@ -3,3 +3,6 @@ index.js
 # Build
 packages/**/lib
 apps/**/.next
+
+# history
+.history

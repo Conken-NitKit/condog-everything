@@ -1,0 +1,33 @@
+{
+  "name": "@condog-pkg/next-auth",
+  "version": "0.0.0",
+  "description": "",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "source": "src/index.ts",
+  "main": "lib/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rimraf ./lib && tsc --project tsconfig.build.json",
+    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next-connect": "^0.13.0",
+    "passport": "0.6.0",
+    "passport-oauth2": "^1.6.1"
+  },
+  "devDependencies": {
+    "@condog-pkg/eslint-config": "*",
+    "@condog-pkg/tsconfig": "*",
+    "@types/passport-oauth2": "^1.4.11"
+  },
+  "author": "kubo-hide-kun",
+  "license": "ISC"
+}
