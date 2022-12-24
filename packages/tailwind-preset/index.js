@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
 const range = require("lodash/range");
 
 /** @type {import('tailwindcss').Config} */
@@ -45,6 +44,7 @@ module.exports = {
         cyan: {
           DEFAULT: "var(--brand-cyan)",
           light: "var(--brand-cyan-light)",
+          bright: "var(--brand-cyan-bright)",
         }
       },
       /* ベースカラー: ブラック */
@@ -59,6 +59,7 @@ module.exports = {
       },
       /* ベースカラー: ブルー */
       blue: {
+        deep: "var(--blue-deep)",
         dark: "var(--blue-dark)",
         DEFAULT: "var(--blue-default)",
         light: "var(--blue-light)",
@@ -69,12 +70,20 @@ module.exports = {
         DEFAULT: "var(--white-default)",
         cream: "var(--white-cream)",
         smoke: "var(--white-smoke)",
+        reef: "var(--white-reef)",
       },
       /* 表現色 */
       expressive: {
+        red: "var(--expressive-red)",
         orange: "var(--expressive-orange)",
         pink: "var(--expressive-pink)",
+        green: "var(--expressive-green)",
       },
     },
+    extend: {
+      backgroundImage: {
+        'brand-gradient-cyan': 'linear-gradient(270deg, var(--brand-cyan-bright) 0%, var(--brand-cyan-dark) 100%)',
+      }
+    }
   }
 };
