@@ -1,4 +1,4 @@
 {
   "extends": "@condog-pkg/tsconfig/library-react",
-  "include": ["src/**/*"]
+  "include": ["."]
 }

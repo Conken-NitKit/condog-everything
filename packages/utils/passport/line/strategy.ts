@@ -25,7 +25,15 @@ export default class LineStrategy extends OAuth2Strategy {
   private _uiLocales: string;
   private _prompt: string;
 
-  constructor(options: StrategyOptions, verify: OAuth2Strategy.VerifyFunction) {
+  constructor(
+    options: StrategyOptions,
+    verify: (
+      accessToken: string,
+      refreshToken: string,
+      profile: unknown,
+      verified: (err?: Error | null, user?: unknown, info?: unknown) => void
+    ) => void
+  ) {
     const { botPrompt, prompt, uiLocales, ...rest } = {
       ...DEFAULT_OPTIONS,
       ...options,
