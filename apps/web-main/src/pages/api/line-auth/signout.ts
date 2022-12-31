@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
-import { cookieName, remove } from '../../lib/coockie';
+import { CookieNames, remove } from '../../../lib/coockie';
 
 export default nextConnect<NextApiRequest, NextApiResponse>().post(
   async (_, res) => {
-    remove(res, cookieName.authToken);
+    remove(res, CookieNames.AUTH_TOKEN);
     res.writeHead(302, { Location: '/' });
     res.end();
   }

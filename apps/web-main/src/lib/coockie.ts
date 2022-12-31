@@ -1,14 +1,12 @@
-import { type NextApiResponse } from 'next';
+import type { NextApiResponse } from 'next';
 
-export const cookieName = {
-  authToken: 'auth_token',
-  clientId: 'client_id',
-  sessionId: 'session_id',
+export const CookieNames = {
+  AUTH_TOKEN: 'auth_token',
+  CLIENT_ID: 'client_id',
+  SESSION_ID: 'session_id',
 } as const;
 
-export type CookieName = typeof cookieName[keyof typeof cookieName];
-
-export type CookieNames = { [key in CookieName]: string };
+export type CookieName = typeof CookieNames[keyof typeof CookieNames];
 
 export type CookieSetting = {
   name: CookieName;
@@ -22,24 +20,24 @@ export type CookieSetting = {
 
 const getCookieSetting = (name: CookieName) => {
   const cookieSettings: Record<CookieName, CookieSetting> = {
-    [cookieName.authToken]: {
-      name: cookieName.authToken,
+    [CookieNames.AUTH_TOKEN]: {
+      name: CookieNames.AUTH_TOKEN,
       expires: 60 * 60 * 24 * 30 * 1000,
       path: '/',
       secure: true,
       httpOnly: false,
       sameSite: 'lax',
     },
-    [cookieName.clientId]: {
-      name: cookieName.clientId,
+    [CookieNames.CLIENT_ID]: {
+      name: CookieNames.CLIENT_ID,
       expires: 60 * 60 * 24 * 30 * 1000,
       path: '/',
       secure: true,
       httpOnly: false,
       sameSite: 'lax',
     },
-    [cookieName.sessionId]: {
-      name: cookieName.sessionId,
+    [CookieNames.SESSION_ID]: {
+      name: CookieNames.SESSION_ID,
       expires: 60 * 60 * 1000,
       maxAge: 60 * 60,
       path: '/',

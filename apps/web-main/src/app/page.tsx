@@ -1,30 +1,18 @@
-import { use } from 'react';
+'use client';
 
-type User = {
-  id: number;
-  login: string;
-};
-
-const fetchUsers: () => Promise<User[]> = async () => {
-  const res = await fetch('https://api.github.com/users');
-  return res.json();
-};
+import { useCallback } from 'react';
+import { lineAuthSdk } from '../lib/LineAuthSdk';
 
 export default function Page() {
-  const users = use(fetchUsers());
-  console.log(users);
+  const handleButtonClick = useCallback(() => {
+    console.log('signin');
+    lineAuthSdk.signin();
+  }, []);
+
   return (
     <div>
       <h1>GitHub Users!</h1>
-      <div>
-        {users.map((user) => {
-          return (
-            <div key={user.id}>
-              {user.id}: {user.login}
-            </div>
-          );
-        })}
-      </div>
+      <button onClick={handleButtonClick}>signin</button>
     </div>
   );
 }

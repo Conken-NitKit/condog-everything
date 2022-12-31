@@ -1,16 +1,13 @@
-import LineStrategy from '@condog-pkg/utils/passport/line/strategy';
+import { LineStrategy } from '@condog-pkg/utils';
 
 export const lineStrategy = new LineStrategy(
   {
-    authorizationURL: '',
-    tokenURL: '',
-    clientID: '',
-    clientSecret: '',
-    callbackURL: '',
-    scope: ['profile', 'openid'],
+    channelID: '1657782125',
+    channelSecret: 'b903e5f55b32c0c871ace5117c010119',
+    callbackURL: 'localhost:3000/api/line-auth/callback',
+    scope: ['profile', 'openid', 'email'],
     botPrompt: 'normal',
     prompt: 'consent',
-    uiLocales: 'en',
   },
   (accessToken, refreshToken, profile, done) => {
     console.log('accessToken', accessToken);

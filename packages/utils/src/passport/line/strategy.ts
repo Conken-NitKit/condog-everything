@@ -13,16 +13,33 @@ const DEFAULT_OPTIONS = {
   uiLocales: null, // ref: https://gist.github.com/msikma/8912e62ed866778ff8cd
 };
 
-export interface StrategyOptions extends OAuth2Strategy.StrategyOptions {
-  botPrompt: string;
+export interface StrategyOptions
+  extends Partial<OAuth2Strategy.StrategyOptions> {
+  channelID: string;
+  channelSecret: string;
+  callbackURL: string;
   prompt: string;
-  uiLocales: string;
+  name?: string;
+  botPrompt?: string;
+  uiLocales?: string;
+  profileURL?: string;
 }
+
+const getOAuth2StrategyOptions = (
+  _options: StrategyOptions
+): OAuth2Strategy.StrategyOptions => {
+  return {
+    ..._options,
+    ...DEFAULT_OPTIONS,
+    clientID: _options.channelID,
+    clientSecret: _options.channelSecret,
+  };
+};
 
 export default class LineStrategy extends OAuth2Strategy {
   private _profileURL: string;
-  private _botPrompt: string;
-  private _uiLocales: string;
+  private _botPrompt: string | null;
+  private _uiLocales: string | null;
   private _prompt: string;
 
   constructor(
@@ -34,17 +51,14 @@ export default class LineStrategy extends OAuth2Strategy {
       verified: (err?: Error | null, user?: unknown, info?: unknown) => void
     ) => void
   ) {
-    const { botPrompt, prompt, uiLocales, ...rest } = {
-      ...DEFAULT_OPTIONS,
-      ...options,
-    };
+    const oauth2StrategyOptions = getOAuth2StrategyOptions(options);
+    super(oauth2StrategyOptions, verify);
 
-    super(rest, verify);
-
-    this._profileURL = rest.profileURL;
-    this._botPrompt = botPrompt;
-    this._uiLocales = uiLocales;
-    this._prompt = prompt;
+    this.name = options.name = 'line';
+    this._profileURL = options.profileURL || DEFAULT_OPTIONS.profileURL;
+    this._botPrompt = options.botPrompt || DEFAULT_OPTIONS.botPrompt;
+    this._uiLocales = options.uiLocales || DEFAULT_OPTIONS.uiLocales;
+    this._prompt = options.prompt;
   }
 
   authenticate(

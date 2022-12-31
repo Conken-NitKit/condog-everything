@@ -5,8 +5,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "files": [
+    "lib"
+  ],
+  "source": "src/index.ts",
+  "main": "lib/index.js",
+  "types": "lib/typescript/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "build": "rimraf ./lib && tsc --project tsconfig.build.json",
