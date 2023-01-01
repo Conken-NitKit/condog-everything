@@ -8,9 +8,10 @@ const DEFAULT_OPTIONS = {
   authorizationURL: 'https://access.line.me/oauth2/v2.1/authorize',
   tokenURL: 'https://api.line.me/oauth2/v2.1/token',
   profileURL: 'https://api.line.me/v2/profile',
+  grantType: 'authorization_code',
   scope: ['profile', 'openid'],
   botPrompt: null, //normal / aggressive
-  uiLocales: null, // ref: https://gist.github.com/msikma/8912e62ed866778ff8cd
+  uiLocales: 'en', // ref: https://gist.github.com/msikma/8912e62ed866778ff8cd
 };
 
 export interface StrategyOptions
@@ -18,6 +19,7 @@ export interface StrategyOptions
   channelID: string;
   channelSecret: string;
   callbackURL: string;
+  code: string;
   prompt: string;
   name?: string;
   botPrompt?: string;
@@ -38,6 +40,7 @@ const getOAuth2StrategyOptions = (
 
 export default class LineStrategy extends OAuth2Strategy {
   private _profileURL: string;
+  private _grantType: string;
   private _botPrompt: string | null;
   private _uiLocales: string | null;
   private _prompt: string;
@@ -55,10 +58,13 @@ export default class LineStrategy extends OAuth2Strategy {
     super(oauth2StrategyOptions, verify);
 
     this.name = options.name = 'line';
+    this._grantType = DEFAULT_OPTIONS.grantType;
     this._profileURL = options.profileURL || DEFAULT_OPTIONS.profileURL;
     this._botPrompt = options.botPrompt || DEFAULT_OPTIONS.botPrompt;
     this._uiLocales = options.uiLocales || DEFAULT_OPTIONS.uiLocales;
     this._prompt = options.prompt;
+
+    console.log(this.authorizationParams({}));
   }
 
   authenticate(
@@ -71,6 +77,8 @@ export default class LineStrategy extends OAuth2Strategy {
     >,
     options?: unknown
   ): void {
+    console.log('req.query', req.query);
+    console.log('authenticating...', this.authorizationParams(options));
     if (req.query && req.query.error_code && !req.query.error) {
       return this.error(
         new Error(
@@ -113,10 +121,13 @@ export default class LineStrategy extends OAuth2Strategy {
   }
 
   authorizationParams(options: unknown): object {
+    console.log('options', options);
     return {
       ...super.authorizationParams(options),
+      state: '12345abcde',
+      grant_type: this._grantType,
       bot_prompt: this._botPrompt,
-      ui_locales: this._uiLocales,
+      ui_locales: this._uiLocales || 'en',
       prompt: this._prompt,
     };
   }

@@ -1,18 +1,12 @@
 'use client';
 
-import { useCallback } from 'react';
-import { lineAuthSdk } from '../lib/LineAuthSdk';
+import Link from 'next/link';
 
 export default function Page() {
-  const handleButtonClick = useCallback(() => {
-    console.log('signin');
-    lineAuthSdk.signin();
-  }, []);
-
   return (
     <div>
       <h1>GitHub Users!</h1>
-      <button onClick={handleButtonClick}>signin</button>
+      <Link href="api/line-auth/signin">Sign in</Link>
     </div>
   );
 }
