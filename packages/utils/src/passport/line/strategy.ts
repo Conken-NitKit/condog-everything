@@ -1,7 +1,4 @@
-import { Request } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
 import OAuth2Strategy from 'passport-oauth2';
-import { ParsedQs } from 'qs';
 
 const DEFAULT_OPTIONS = {
   useAuthorizationHeaderforGET: true,
@@ -11,7 +8,7 @@ const DEFAULT_OPTIONS = {
   grantType: 'authorization_code',
   scope: ['profile', 'openid'],
   botPrompt: null, //normal / aggressive
-  uiLocales: 'en', // ref: https://gist.github.com/msikma/8912e62ed866778ff8cd
+  uiLocales: null, // ref: https://gist.github.com/msikma/8912e62ed866778ff8cd
 };
 
 export interface StrategyOptions
@@ -64,33 +61,9 @@ export default class LineStrategy extends OAuth2Strategy {
     this._uiLocales = options.uiLocales || DEFAULT_OPTIONS.uiLocales;
     this._prompt = options.prompt;
 
-    console.log(this.authorizationParams({}));
-  }
-
-  authenticate(
-    req: Request<
-      ParamsDictionary,
-      unknown,
-      unknown,
-      ParsedQs,
-      Record<string, unknown>
-    >,
-    options?: unknown
-  ): void {
-    console.log('req.query', req.query);
-    console.log('authenticating...', this.authorizationParams(options));
-    if (req.query && req.query.error_code && !req.query.error) {
-      return this.error(
-        new Error(
-          JSON.stringify({
-            name: 'LineAuthorizationError',
-            message: req.query.error,
-            code: req.query.error_code,
-          })
-        )
-      );
-    }
-    super.authenticate(req, options);
+    this._oauth2.useAuthorizationHeaderforGET(
+      DEFAULT_OPTIONS.useAuthorizationHeaderforGET
+    );
   }
 
   userProfile(
@@ -127,7 +100,7 @@ export default class LineStrategy extends OAuth2Strategy {
       state: '12345abcde',
       grant_type: this._grantType,
       bot_prompt: this._botPrompt,
-      ui_locales: this._uiLocales || 'en',
+      ui_locales: this._uiLocales,
       prompt: this._prompt,
     };
   }
